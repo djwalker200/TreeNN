@@ -72,7 +72,10 @@ class Trainer():
         losses = []
         for batch in dataloader:
             loss =  self.eval_step(batch)
-            loss.append(loss.item())
+            losses.append(loss.item())
+        
+        return np.array(losses)
+
 
 
             
