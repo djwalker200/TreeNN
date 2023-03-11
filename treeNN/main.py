@@ -1,18 +1,16 @@
-import argparse
 import numpy as np  
-import torch
 import matplotlib.pyplot as plt
-from node import Node   
-from leaf import Leaf 
-from tree import Tree
+import torch
 from trainer import Trainer
+import yaml
 
-## ADD ARGPARSE
+with open('configs.yaml', 'r') as f:
+    configs = yaml.safe_load(f)
 
 ## LOAD DATASET
 
 ## Create Trainer
-# trainer = Trainer(args)
+trainer = Trainer(configs)
 
 ## TRAIN
 

@@ -6,17 +6,18 @@ import matplotlib.pyplot as plt
 class Node(torch.nn.Module):
 
     def __init__(self, params):
+        super(Node, self).__init__()
         
         self.input_dim = params['input_dim'] 
-        self.hidden_dim = params["hidden_dim"]
+        self.hidden_dim = params['nodes']['hidden_dim']
         self.feature_dim = params['feature_dim']
         self.num_leaves = params["num_leaves"]
 
         # Encode input to hidden vector
-        self.encoder = nn.Sequential([
+        self.encoder = nn.Sequential(
             nn.Linear(self.input_dim, self.hidden_dim),
             nn.Linear(self.hidden_dim, self.hidden_dim),
-        ])
+        )
 
         # Map hidden vector to leaf prediction
         self.predictor = nn.Linear(self.hidden_dim, self.num_leaves)

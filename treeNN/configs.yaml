@@ -1,0 +1,18 @@
+train:
+  epochs: 10
+  learning_rate: 0.01
+  batch_size: 32
+  save_freq: 100
+  log_freq: 100
+ 
+nodes:
+  hidden_dim: 64
+
+leaves: 
+  hidden_dim: 64
+
+input_dim: 784
+feature_dim: 64
+num_leaves: 4
+num_classes: 10
+

@@ -6,36 +6,38 @@ from tree import TreeNN
 
 class Trainer():
 
-    def __init__(
-        self,
-        epochs,
-        learning_rate,
-        batch_size,
-        save_freq,
-        log_freq,
-        params,
-    ):
+    def __init__(self, configs):
 
-    self.epochs = epochs
-    self.learning_rate = learning_rate
-    self.batch_size = batch_size
-    self.save_freq = save_freq
-    self.log_freq = log_freq
-    self.params = params
+        self.configs = configs
+        self.num_epochs = configs['train']['epochs']
+        self.learning_rate = configs['train']['learning_rate']
+        self.batch_size = configs['train']['batch_size']
+        self.save_freq = configs['train']['save_freq']
+        self.log_freq = configs['train']['log_freq']
 
-    self.model = TreeNN(self.params)
-    self.optimizer = torch.optim.Adam(self.model.parameters)
-    self.criterion = nn.CrossEntropyLoss()
+        self.epoch = 0
+
+        self.model = TreeNN(self.configs)
+        self.optimizer = torch.optim.Adam(self.model.parameters())
+        self.criterion = nn.CrossEntropyLoss()
 
     def compute_loss(self, Y_pred, Y_true):
 
         return self.criterion(Y_pred, Y_true)
 
-    def save_model(self, filepath):
-        torch.save(self.model, filepath)
+    def save_model(self, epoch, filepath):
+        torch.save({
+            'epoch' : epoch,
+            'model_state_dict': self.model.state_dict(),
+            'optimizer_state_dict': self.optimizer.state_dict(),
+            },filepath)
+        
 
     def load_model(self, filepath):
-        self.model = torch.load(filepath)
+        checkpoint = torch.load(PATH)
+        self.model.load_state_dict(checkpoint['model_state_dict'])
+        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+        self.epoch = checkpoint['epoch']
 
     def train_step(batch):
 
@@ -57,11 +59,9 @@ class Trainer():
         return loss
 
 
-
-
     def train(dataloader):
 
-        for i in range(self.epochs):
+        for i in range(self.num_epochs):
             for batch in dataloader:
 
                 loss = self.train_step(batch)

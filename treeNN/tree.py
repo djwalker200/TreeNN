@@ -1,19 +1,21 @@
 import numpy as np  
-import torch
 import matplotlib.pyplot as plt
-
+import torch
+import torch.nn as nn
 from node import Node   
 from leaf import Leaf 
-class TreeNNs(torch.nn.Module):
 
-    def __init__(self, params):
+class TreeNN(torch.nn.Module):
 
-        self.params = params
-        self.num_leaves = params['num_leaves']
-        self.output_dim = params['num_classes']
+    def __init__(self, configs):
+        super(TreeNN, self).__init__()
+
+        self.configs = configs
+        self.num_leaves = configs['num_leaves']
+        self.output_dim = configs['num_classes']
         #self.nodes = nn.ModuleList([Node() for i in range(self.num_nodes)])
-        self.delegator = Node(self.params)
-        self.leaves = nn.ModuleList([Leaf(self.params) for i in range(self.num_leaves)])
+        self.delegator = Node(self.configs)
+        self.leaves = nn.ModuleList([Leaf(self.configs) for i in range(self.num_leaves)])
 
     def forward(self, inputs):
         # inputs =  (batch size, feture_dim)
