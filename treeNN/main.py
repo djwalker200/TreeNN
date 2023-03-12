@@ -1,4 +1,3 @@
-from keras.datasets import mnist
 import numpy as np  
 import matplotlib.pyplot as plt
 import torch
@@ -10,8 +9,6 @@ import yaml
 with open('configs.yaml', 'r') as f:
     configs = yaml.safe_load(f)
 
-## LOAD DATASET
-# (train_X, train_y), (test_X, test_y) = mnist.load_data()
 train_dataloader = torchvision.datasets.MNIST(
     'datasets/MNIST',
     train=True,

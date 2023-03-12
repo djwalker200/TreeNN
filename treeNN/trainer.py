@@ -12,6 +12,7 @@ class Trainer():
         self.num_epochs = configs['train']['epochs']
         self.learning_rate = configs['train']['learning_rate']
         self.batch_size = configs['train']['batch_size']
+        self.checkpoint_dir - configs['train']['checkpoint_dir']
         self.save_freq = configs['train']['save_freq']
         self.log_freq = configs['train']['log_freq']
 
@@ -25,12 +26,12 @@ class Trainer():
 
         return self.criterion(Y_pred, Y_true)
 
-    def save_model(self, epoch, filepath):
+    def save_model(self):
         torch.save({
-            'epoch' : epoch,
+            'epoch' : self.current_epoch,
             'model_state_dict': self.model.state_dict(),
             'optimizer_state_dict': self.optimizer.state_dict(),
-            },filepath)
+            },f"{self.checkpoint_dir}_{self.current_epoch}.pt")
         
 
     def load_model(self, filepath):
@@ -41,13 +42,19 @@ class Trainer():
 
     def train_step(batch):
 
+        # Zero Gradients
+        self.optimizer.zero_grad()
+
+        # Compute loss
         X = batch[0]
         Y_true = batch[1]
         Y_pred = model(X)
-        self.optimizer.zero_grad()
         loss = self.compute_loss(Y_pred, Y_true)
+
+        # Backprop update
         loss.backward()
         self.optimizer.step()
+
         return loss
 
     def eval_step(batch):
@@ -61,14 +68,24 @@ class Trainer():
 
     def train(dataloader):
 
+        self.model.train()
         for i in range(self.num_epochs):
-            for batch in dataloader:
 
+            if self.current_epoch % self.save_freq == 0:
+                self.save_model()
+
+            if self.current_epoch % self.log_freq == 0:
+                # ADD LOGGING
+                continue 
+
+            for batch in dataloader:
                 loss = self.train_step(batch)
 
+            self.current_epoch += 1
 
     def evaluate(dataloader):
 
+        self.model.eval()
         losses = []
         for batch in dataloader:
             loss =  self.eval_step(batch)
