@@ -6,7 +6,7 @@ from tree import TreeNN
 
 class Trainer():
 
-    def __init__(self, configs):
+    def __init__(self, model, configs):
 
         self.configs = configs
         self.device = configs['device']
@@ -19,7 +19,7 @@ class Trainer():
         self.steps = 0
         self.epoch = 0
 
-        self.model = TreeNN(self.configs)
+        self.model = model
         self.optimizer = torch.optim.Adam(self.model.parameters())
         self.criterion = nn.CrossEntropyLoss()
 
@@ -32,7 +32,7 @@ class Trainer():
             'epoch' : self.epoch,
             'model_state_dict': self.model.state_dict(),
             'optimizer_state_dict': self.optimizer.state_dict(),
-            },f"{self.checkpoint_dir}checkpoint_{self.epoch}.pt")
+            },f"{self.checkpoint_dir}/checkpoint_{self.epoch}.pt")
         
 
     def load_model(self, filepath):
