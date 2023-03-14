@@ -1,12 +1,10 @@
-import numpy as np  
-import matplotlib.pyplot as plt
-import torch
-from torch.utils.data import DataLoader
-import torchvision
-from torchvision.transforms import ToTensor
-from trainer import Trainer
 import yaml
-
+import numpy as np  
+import torchvision
+from tree import TreeNN
+from trainer import Trainer
+from torch.utils.data import DataLoader
+from torchvision.transforms import ToTensor
 
 with open('configs.yaml', 'r') as f:
     configs = yaml.safe_load(f)
@@ -36,13 +34,13 @@ test_dataloader =  DataLoader(train_dataset,
 
 
 ## Create Trainer
-trainer = Trainer(configs)
+model = TreeNN(configs)
+trainer = Trainer(model, configs)
 
 ## TRAIN
 trainer.train(train_dataloader)
 
 ## EVALUATE
-
 #train_losses = trainer.evaluate(train_dataloader)
 eval_stats = trainer.evaluate(test_dataloader)
 print(f"Eval Accuracy: {eval_stats['accuracy']}")
